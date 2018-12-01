@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "src/dec01_1",
+    "src/dec01_2",
+]
