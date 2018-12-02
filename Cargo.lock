@@ -1,9 +1,5 @@
 [[package]]
-name = "dec01_1"
-version = "0.1.0"
-
-[[package]]
-name = "dec01_2"
+name = "dec01"
 version = "0.1.0"
 
 [[package]]
