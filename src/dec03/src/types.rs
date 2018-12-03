@@ -134,9 +134,6 @@ impl Grid {
         // intact for now, but will very soon discover if this assumption is true.
         self.intact.insert(claim.id);
 
-        // Keep track of which other Claim ID's we overlap with when updating our grid.
-        let mut overlapping = HashSet::new();
-
         for point in claim.points() {
             // Bookkeeping used for pretty printing the board in the print() method. It is worth
             // mentioning here that you should not try to print the final board that is generated
@@ -148,22 +145,15 @@ impl Grid {
             self.max_y = max(self.max_y, point.y);
 
             // We are now the most recent visitor of the current point. If the current point have
-            // already had a visitor it means we overlap with former visitor. Update our
-            // `overlapping` set with this information.
+            // already had a visitor it means we overlap with one or more former visitors. Update
+            // our `intact` set with this information.
             if let Some(last_claim_id) = self.recent_visitor.insert(point.clone(), claim.id) {
-                overlapping.insert(last_claim_id);
-                overlapping.insert(claim.id);
+                self.intact.remove(&last_claim_id);
+                self.intact.remove(&claim.id);
             }
 
             // Bump the level by one.
             *self.grid.entry(point).or_insert(0) += 1;
-        }
-
-        // We should by now have build up a set of Claim ID's that we have overlapped with. We
-        // remove our own Claim ID and any other Claim ID's that we overlapped with during this
-        // update of the grid.
-        for value in overlapping {
-            self.intact.remove(&value);
         }
     }
 
