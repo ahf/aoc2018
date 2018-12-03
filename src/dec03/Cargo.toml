@@ -1,0 +1,7 @@
+[package]
+name = "dec03"
+version = "0.1.0"
+authors = ["Alexander Færøy <ahf@0x90.dk>"]
+
+[dependencies]
+nom = "^4.1"
