@@ -1,0 +1,96 @@
+// Copyright (c) 2018 Alexander Færøy. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+use std::collections::HashSet;
+
+use std::fs::File;
+use std::io::Read;
+
+fn case(c: char) -> char {
+    assert!(c.is_ascii());
+
+    if c.is_ascii_lowercase() {
+        c.to_ascii_uppercase()
+    } else {
+        c.to_ascii_lowercase()
+    }
+}
+
+fn compare_lowercase(a: char, b: char) -> bool {
+    assert!(a.is_ascii());
+    assert!(b.is_ascii());
+
+    a.to_ascii_lowercase() == b.to_ascii_lowercase()
+}
+
+// O(n) algorithm that returns a set of lower cased characters that is used in the given input
+// string.
+fn unique_characters(value: &str) -> HashSet<char> {
+    let mut result = HashSet::new();
+
+    for character in value.chars() {
+        assert!(character.is_ascii());
+
+        result.insert(character.to_ascii_lowercase());
+    }
+
+    result
+}
+
+fn reduce(value: &str, filter: char) -> String {
+    // Our result.
+    let mut result = String::with_capacity(value.len());
+
+    for character in value.chars() {
+        if let Some(last_character) = result.chars().last() {
+            assert!(last_character.is_ascii());
+
+            let ignore = character.to_ascii_lowercase() != filter;
+
+            if ignore && last_character == case(character) {
+                result.pop();
+                continue;
+            }
+        }
+
+        result.push(character);
+    }
+
+    result
+}
+
+fn compute_result_task1(value: &str) -> usize {
+    reduce(value, '@').len()
+}
+
+fn compute_result_task2(_value: &str) -> i32 {
+    0
+}
+
+fn main() {
+    let mut file = File::open("input/data.txt").expect("Unable to open input file");
+    let mut content = String::new();
+    file.read_to_string(&mut content).expect("Unable to read input file");
+
+    // Remove trailing newline.
+    content.pop();
+
+    println!("Result of task 1: {}", compute_result_task1(&content));
+    println!("Result of task 2: {}", compute_result_task2(&content));
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn known_results_task1() {
+        assert_eq!(reduce("dabAcCaCBAcCcaDA"), "dabCBAcaDA");
+        assert_eq!(reduce("dabAcCaCBAcCcaDA").len(), 10);
+    }
+
+    #[test]
+    fn known_results_task2() {
+    }
+}
