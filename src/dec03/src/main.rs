@@ -17,7 +17,6 @@ fn compute_result_task1(grid: &Grid) -> usize {
     grid.count(2)
 }
 
-
 fn compute_result_task2(grid: &Grid) -> i32 {
     let v = grid.intact();
     assert_eq!(v.len(), 1);

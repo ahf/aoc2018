@@ -41,18 +41,14 @@ fn check_strings(a: &String, b: &String) -> Option<String> {
     let letters = a.chars().zip(b.chars());
 
     // Build a new string where letters at the same position of `a` and `b` are removed.
-    let result: String = letters.filter_map(|(v_a, v_b)| {
-        if v_a == v_b {
-            Some(v_a)
-        } else {
-            None
-        }
-    }).collect();
+    let result: String = letters
+        .filter_map(|(v_a, v_b)| if v_a == v_b { Some(v_a) } else { None })
+        .collect();
 
     // If our stripped string in `result` have one less character than the input, we have the
     // result.
     if a.len() - 1 == result.len() {
-        return Some(result)
+        return Some(result);
     }
 
     // This was not the result we were looking for.
@@ -64,7 +60,7 @@ fn compute_result_task2_naive(lines: &Vec<String>) -> String {
     for (index, a) in lines.iter().enumerate() {
         for b in lines.iter().skip(index + 1) {
             if let Some(result) = check_strings(a, b) {
-                return result
+                return result;
             }
         }
     }
@@ -79,7 +75,7 @@ fn compute_result_task2_linear(lines: &Vec<String>) -> String {
     for line in lines {
         // We use '@' as replacement character. Make sure our input string does not contain any
         // '@' characters.
-        assert!(! line.contains("@"));
+        assert!(!line.contains("@"));
 
         // For each character in the line, create a new string where a character is replaced by
         // '@'.
@@ -87,26 +83,21 @@ fn compute_result_task2_linear(lines: &Vec<String>) -> String {
         // For example:
         //   "foobar" -> ["@oobar", "f@obar", "fo@bar", "foo@ar", "foob@r", "fooba@"].
         for (index, _) in line.chars().enumerate() {
-            let new_line: String = line.chars().enumerate().map(|(i, c)| {
-                if i == index {
-                    '@'
-                } else {
-                    c
-                }
-            }).collect();
+            let new_line: String = line
+                .chars()
+                .enumerate()
+                .map(|(i, c)| if i == index { '@' } else { c })
+                .collect();
 
             assert_eq!(new_line.len(), line.len());
 
             // If our mutated string already exists, remove all '@' from the string and return the
             // result.
-            if ! set.insert(new_line.clone()) {
-                return new_line.chars().filter_map(|c| {
-                    if c != '@' {
-                        Some(c)
-                    } else {
-                        None
-                    }
-                }).collect();
+            if !set.insert(new_line.clone()) {
+                return new_line
+                    .chars()
+                    .filter_map(|c| if c != '@' { Some(c) } else { None })
+                    .collect();
             }
         }
     }
@@ -124,8 +115,14 @@ fn main() {
     }
 
     println!("Result of task 1: {}", compute_result_task1(&lines));
-    println!("Result of task 2: {} (linear)", compute_result_task2_linear(&lines));
-    println!("Result of task 2: {} (naive)", compute_result_task2_naive(&lines));
+    println!(
+        "Result of task 2: {} (linear)",
+        compute_result_task2_linear(&lines)
+    );
+    println!(
+        "Result of task 2: {} (naive)",
+        compute_result_task2_naive(&lines)
+    );
 }
 
 #[cfg(test)]

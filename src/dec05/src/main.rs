@@ -47,7 +47,7 @@ fn reduce_with_filter(input: &str, filter: Option<char>) -> String {
         // we continue processing our string without adding our character to the result.
         if let Some(filter_character) = filter {
             if character.eq_ignore_ascii_case(&filter_character) {
-                continue
+                continue;
             }
         }
 
@@ -91,7 +91,8 @@ fn compute_result_task2(input: &str) -> usize {
 fn main() {
     let mut file = File::open("input/data.txt").expect("Unable to open input file");
     let mut content = String::new();
-    file.read_to_string(&mut content).expect("Unable to read input file");
+    file.read_to_string(&mut content)
+        .expect("Unable to read input file");
 
     // Remove trailing newline.
     content.pop();
@@ -133,7 +134,10 @@ mod tests {
     #[test]
     fn known_results_task2() {
         assert_eq!(reduce_with_filter("dabAcCaCBAcCcaDA", Some('a')), "dbCBcD");
-        assert_eq!(reduce_with_filter("dabAcCaCBAcCcaDA", Some('b')), "daCAcaDA");
+        assert_eq!(
+            reduce_with_filter("dabAcCaCBAcCcaDA", Some('b')),
+            "daCAcaDA"
+        );
         assert_eq!(reduce_with_filter("dabAcCaCBAcCcaDA", Some('c')), "daDA");
         assert_eq!(reduce_with_filter("dabAcCaCBAcCcaDA", Some('d')), "abCBAc");
 

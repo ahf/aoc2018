@@ -89,9 +89,7 @@ named!(event<CompleteStr, Event>,
 
 pub fn parse(s: &str) -> Option<Event> {
     match event(CompleteStr(s)) {
-        Ok((CompleteStr(""), event)) =>
-            Some(event),
-        _ =>
-            None
+        Ok((CompleteStr(""), event)) => Some(event),
+        _ => None,
     }
 }

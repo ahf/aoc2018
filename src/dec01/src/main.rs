@@ -20,8 +20,8 @@ fn compute_result_task2(values: &LinkedList<i32>) -> i32 {
     for value in values.iter().cycle() {
         counter += *value;
 
-        if ! state.insert(counter) {
-            break
+        if !state.insert(counter) {
+            break;
         }
     }
 

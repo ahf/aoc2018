@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-use std::cmp::{min, max};
+use std::cmp::{max, min};
 use std::collections::{HashMap, HashSet};
 use std::iter::FromIterator;
 
@@ -57,7 +57,11 @@ pub struct Claim {
 
 impl Claim {
     pub fn new(id: ClaimID, point: Point, dimension: Dimension) -> Claim {
-        Claim { id, point, dimension }
+        Claim {
+            id,
+            point,
+            dimension,
+        }
     }
 
     #[allow(dead_code)]
@@ -171,7 +175,7 @@ impl Grid {
             for y in self.min_y..(self.max_y + 2) {
                 match self.grid.get(&Point::new(x, y)) {
                     Some(l) => print!("{}", l),
-                    None    => print!("."),
+                    None => print!("."),
                 }
             }
 

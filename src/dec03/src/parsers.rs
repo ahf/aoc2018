@@ -33,9 +33,7 @@ named!(claim<CompleteStr, Claim>,
 
 pub fn parse_claim(s: &str) -> Option<Claim> {
     match claim(CompleteStr(s)) {
-        Ok((CompleteStr(""), claim)) =>
-            Some(claim),
-        _ =>
-            None
+        Ok((CompleteStr(""), claim)) => Some(claim),
+        _ => None,
     }
 }

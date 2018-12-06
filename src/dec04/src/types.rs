@@ -30,7 +30,10 @@ pub struct Event {
 
 impl Event {
     pub fn new(datetime: DateTime, event_type: EventType) -> Event {
-        Event { datetime, event_type }
+        Event {
+            datetime,
+            event_type,
+        }
     }
 
     pub fn event_type(&self) -> &EventType {
@@ -145,8 +148,18 @@ pub struct GuardSummary {
 }
 
 impl GuardSummary {
-    pub fn new(id: GuardID, most_missed_timestamp: Time, most_missed_timestamp_count: usize, minutes_asleep: usize) -> GuardSummary {
-        GuardSummary { id, most_missed_timestamp, most_missed_timestamp_count, minutes_asleep }
+    pub fn new(
+        id: GuardID,
+        most_missed_timestamp: Time,
+        most_missed_timestamp_count: usize,
+        minutes_asleep: usize,
+    ) -> GuardSummary {
+        GuardSummary {
+            id,
+            most_missed_timestamp,
+            most_missed_timestamp_count,
+            minutes_asleep,
+        }
     }
 
     pub fn id(&self) -> GuardID {
@@ -184,25 +197,28 @@ impl EventTracker {
 
     pub fn event(&mut self, event: &Event) {
         match event.event_type() {
-            EventType::GuardAsleep =>
-                self.asleep(event.datetime()),
-            EventType::GuardAwake =>
-                self.awake(event.datetime()),
-            EventType::GuardBeginsShift(guard) =>
-                self.begins_shift(guard),
+            EventType::GuardAsleep => self.asleep(event.datetime()),
+            EventType::GuardAwake => self.awake(event.datetime()),
+            EventType::GuardBeginsShift(guard) => self.begins_shift(guard),
         }
     }
 
     fn asleep(&mut self, datetime: &DateTime) {
-        self.sleep_tracker.get_mut(&self.current_guard).unwrap().asleep(datetime);
+        self.sleep_tracker
+            .get_mut(&self.current_guard)
+            .unwrap()
+            .asleep(datetime);
     }
 
     fn awake(&mut self, datetime: &DateTime) {
-        self.sleep_tracker.get_mut(&self.current_guard).unwrap().awake(datetime);
+        self.sleep_tracker
+            .get_mut(&self.current_guard)
+            .unwrap()
+            .awake(datetime);
     }
 
     fn begins_shift(&mut self, guard: &GuardID) {
-        if ! self.sleep_tracker.contains_key(guard) {
+        if !self.sleep_tracker.contains_key(guard) {
             self.sleep_tracker.insert(*guard, SleepTracker::new());
         }
 
@@ -241,7 +257,12 @@ impl EventTracker {
                 }
             }
 
-            result.push(GuardSummary::new(*guard_id, Time::new(most_missed_timestamp.0 as u8, most_missed_timestamp.1 as u8), most_missed_timestamp_count, total_minutes_asleep));
+            result.push(GuardSummary::new(
+                *guard_id,
+                Time::new(most_missed_timestamp.0 as u8, most_missed_timestamp.1 as u8),
+                most_missed_timestamp_count,
+                total_minutes_asleep,
+            ));
         }
 
         result
@@ -264,11 +285,11 @@ impl SleepDuration {
 
         for minute in 0..self.duration {
             let mut hour = time.hour() as u32;
-            let mut min  = time.minutes() as u32 + minute;
+            let mut min = time.minutes() as u32 + minute;
 
             if min > 59 {
                 hour += 1;
-                min  =  0;
+                min = 0;
             }
 
             v.push((hour, min));
@@ -313,10 +334,11 @@ impl SleepTracker {
             assert_eq!(datetime.date().month(), other.date().month());
             assert_eq!(datetime.date().day(), other.date().day());
 
-            let delta_minutes = (other.time().hour() - datetime.time().hour()) * 60 +
-                                (other.time().minutes() - datetime.time().minutes());
+            let delta_minutes = (other.time().hour() - datetime.time().hour()) * 60
+                + (other.time().minutes() - datetime.time().minutes());
 
-            self.sleep_periods.push(SleepDuration::new(datetime.clone(), delta_minutes.into()));
+            self.sleep_periods
+                .push(SleepDuration::new(datetime.clone(), delta_minutes.into()));
         } else {
             // We arrived from a state which was not `Asleep`? Sounds weird.
             assert!(false);
